@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Card from "../components/Card";
+import PokemonIdentity from "../components/PokemonIdentity";
 
 function AboutPokemon() {
     return (
@@ -10,16 +11,7 @@ function AboutPokemon() {
                 </div>
 
                 <div className="informationWrapper">
-                    <div className="identity">
-                        <div>
-                            <h2>saxeli</h2>
-                            <p>tipi, tipi</p>
-                        </div>
-                        {/* TODO დაჭერისას უნდა იცვლებოდეს მთლიანი გულით */}
-                        <button>
-                            <img src="/images/heart_border.svg" alt="" />
-                        </button>
-                    </div>
+                    <PokemonIdentity />
 
                     <div id="progresBars">
                         <div>
@@ -79,30 +71,6 @@ const Container = styled.div`
             width: 100%;
             padding: 10px;
             background-color: #f1f1f1;
-
-            .identity {
-                width: 100%;
-
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-
-                div {
-                    text-align: start;
-                    h2 {
-                        margin: 0;
-                    }
-                    p {
-                        margin: 0;
-                    }
-                }
-                button {
-                    border: none;
-                    background-color: transparent;
-                    cursor: pointer;
-                    display: flex;
-                }
-            }
 
             #progresBars {
                 margin-top: 10px;

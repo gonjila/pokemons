@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
+
+import { mainContext } from "../context/MainContext";
 
 function ControlBar() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { setCardsLayout } = useContext(mainContext);
     const [allPokemonPage, setAllPokemonPage] = useState(true);
 
     useEffect(() => {
@@ -20,6 +23,13 @@ function ControlBar() {
     };
     const changePageToFavorites = () => {
         navigate("/favorite-pokemons");
+    };
+
+    const onRowLayout = () => {
+        setCardsLayout("row");
+    };
+    const onBlockLayout = () => {
+        setCardsLayout("block");
     };
 
     return (
@@ -54,12 +64,12 @@ function ControlBar() {
                     <option value="4" />
                 </datalist>
 
-                <div id="btnLayout">
+                <div id="layoutBtnWrapper">
                     {/* TODO ღილაკებზე დაჭერისას უნდა შეიცვალოს განლაგება */}
-                    <button>
+                    <button onClick={onRowLayout}>
                         <img src="/images/rowLayoutIcon.svg" alt="row layout" />
                     </button>
-                    <button>
+                    <button onClick={onBlockLayout}>
                         <img src="/images/blockLayoutIcon.svg" alt="block layout" />
                     </button>
                 </div>
@@ -111,13 +121,15 @@ const Container = styled.div`
             width: 30%;
         }
 
-        #btnLayout {
+        #layoutBtnWrapper {
             height: 40px;
 
             button {
                 height: 100%;
                 border: none;
                 background-color: #fff;
+                cursor: pointer;
+
                 &:first-child {
                     margin-right: 5px;
                 }

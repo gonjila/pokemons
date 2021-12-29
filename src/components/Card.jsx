@@ -1,20 +1,22 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import { mainContext } from "../context/MainContext";
+import PokemonIdentity from "./PokemonIdentity";
+
 function Card() {
+    const { cardsLayout } = useContext(mainContext);
+
     return (
         <Container>
-            <Link to="/about-pokemon">
-                <img className="pokemonImg" src="/images/pokemon.png" alt="pokemon" />
-            </Link>
-            <div id="textWrapper">
-                <div id="text">
-                    <h3>saxeli</h3>
-                    <p>tipi, tipi</p>
+            <div id={cardsLayout === "row" ? "rowLayoutCard" : "blockLayoutCard"}>
+                <Link to="/about-pokemon/1">
+                    <img className="pokemonImg" src="/images/pokemon.png" alt="pokemon" />
+                </Link>
+                <div className="identityWrapper">
+                    <PokemonIdentity />
                 </div>
-                <button>
-                    <img src="/images/heart_border.svg" alt="" />
-                </button>
             </div>
         </Container>
     );
@@ -23,50 +25,54 @@ function Card() {
 export default Card;
 
 const Container = styled.div`
-    /* height: 100px; */
-    border: 1px solid #ced4da;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .pokemonImg {
-        width: 100%;
-        height: 100%;
-    }
-
-    #textWrapper {
-        width: 100%;
-        padding: 10px;
-        background-color: #dee2e6;
+    #blockLayoutCard {
+        max-height: 315px;
+        padding: 0;
+        border: 1px solid #c5c5c5;
 
         display: flex;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        justify-content: space-between;
 
-        #text {
-            h3 {
-                margin: 0;
-            }
-            p {
-                margin: 0;
+        a {
+            height: 100%;
+
+            .pokemonImg {
+                width: 100%;
+                height: 100%;
             }
         }
 
-        button {
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
+        .identityWrapper {
+            width: 100%;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+    }
 
-            display: flex;
-            /* justify-content: center;
-            align-items: center; */
+    #rowLayoutCard {
+        height: 75px;
+        padding: 0;
+        border: 1px solid #c5c5c5;
 
-            img {
-                /* width: 100%; */
-                /* height: 100%; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        a {
+            height: 100%;
+
+            .pokemonImg {
+                width: 100%;
+                height: 100%;
             }
+        }
+
+        .identityWrapper {
+            width: 100%;
+            padding: 10px;
+            background-color: #f1f1f1;
         }
     }
 `;
