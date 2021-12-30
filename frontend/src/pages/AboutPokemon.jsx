@@ -1,25 +1,44 @@
+import { useLocation } from "react-router-dom";
+import { useQuery, gql } from "@apollo/client";
 import styled from "styled-components";
+
 import Card from "../components/Card";
 import PokemonIdentity from "../components/PokemonIdentity";
 
 function AboutPokemon() {
-    return (
+    const location = useLocation();
+    //linkდან იღებს პოკემონის სახელს
+    const pokemonName = location.pathname.split("/");
+
+    const { data } = useQuery(GET_POKEMON_BY_NAME_QUERY, {
+        variables: { name: pokemonName[2] },
+    });
+
+    data && console.log("pokemon data", data.pokemonByName);
+
+    // თუ მონაცემები არსებობს დააბრუნებს Containerს თუ არადა რეაქტის ცარიელ ფრაგმენტს
+    return data ? (
         <Container>
             <div className="aboutPokemon">
                 <div className="pokemonImgWrapper">
-                    <img src="/images/pokemon.png" alt="pokemon" />
+                    <img src={data.pokemonByName.image} alt={data.pokemonByName.name} />
                 </div>
 
                 <div className="informationWrapper">
-                    <PokemonIdentity name="" types="" />
+                    <PokemonIdentity
+                        id={data.pokemonByName.id}
+                        name={data.pokemonByName.name}
+                        types={data.pokemonByName.types}
+                        isFavorite={data.pokemonByName.isFavorite}
+                    />
 
                     <div id="progresBars">
                         <div>
-                            <progress id="CP" value={35} max={100} />
+                            <progress id="CP" value={891} max={data.pokemonByName.maxCP} />
                             <label htmlFor="CP">CP: 891</label>
                         </div>
                         <div>
-                            <progress id="HP" value={45} max={100} />
+                            <progress id="HP" value={1008} max={data.pokemonByName.maxHP} />
                             <label htmlFor="HP">HP:1008</label>
                         </div>
                     </div>
@@ -28,11 +47,15 @@ function AboutPokemon() {
                 <div className="pokemonSizes">
                     <div>
                         <h3>Weight</h3>
-                        <p>7.88kg - 10.13kg</p>
+                        <p>
+                            {data.pokemonByName.weight.minimum} - {data.pokemonByName.weight.maximum}
+                        </p>
                     </div>
                     <div>
                         <h3>Height</h3>
-                        <p>0.44m - 0.56m</p>
+                        <p>
+                            {data.pokemonByName.height.minimum} - {data.pokemonByName.height.maximum}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -40,12 +63,44 @@ function AboutPokemon() {
             <h3>Evolutions</h3>
 
             <div id="evolutionExamples">
-                <Card />
-                <Card />
+                {data.pokemonByName.evolutions.map((pokemon) => (
+                    <Card key={pokemon.id} pokemon={pokemon} />
+                ))}
             </div>
         </Container>
+    ) : (
+        <></>
     );
 }
+
+const GET_POKEMON_BY_NAME_QUERY = gql`
+    query pokemonByName($name: String!) {
+        pokemonByName(name: $name) {
+            id
+            image
+            sound
+            name
+            types
+            isFavorite
+            weight {
+                minimum
+                maximum
+            }
+            height {
+                minimum
+                maximum
+            }
+            maxCP
+            maxHP
+            evolutions {
+                id
+                image
+                name
+                isFavorite
+            }
+        }
+    }
+`;
 
 export default AboutPokemon;
 
@@ -103,6 +158,7 @@ const Container = styled.div`
                 width: 50%;
                 padding: 20px 20px 20px;
                 border: 1px solid #c5c5c5;
+                text-align: center;
 
                 h3 {
                     margin: 0;

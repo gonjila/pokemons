@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useQuery, gql } from "@apollo/client";
 import styled from "styled-components";
 
