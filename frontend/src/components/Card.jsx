@@ -20,6 +20,7 @@ function Card({ pokemon }) {
                 </Link>
                 <div className="identityWrapper">
                     <PokemonIdentity
+                        id={pokemon && pokemon.id}
                         name={pokemon && pokemon.name}
                         types={pokemon && pokemon.types}
                         isFavorite={pokemon && pokemon.isFavorite}
@@ -34,7 +35,7 @@ export default Card;
 
 const Container = styled.div`
     #blockLayoutCard {
-        max-height: 315px;
+        height: 315px;
         padding: 0;
         border: 1px solid #c5c5c5;
 
@@ -44,11 +45,13 @@ const Container = styled.div`
         align-items: center;
 
         a {
+            width: 100%;
             height: 100%;
 
             .pokemonImg {
                 width: 100%;
-                height: 100%;
+                max-height: 235px;
+                object-fit: contain;
             }
         }
 

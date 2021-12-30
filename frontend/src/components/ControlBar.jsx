@@ -17,18 +17,18 @@ function ControlBar() {
     useEffect(() => {
         if (location.pathname === "/") {
             setAllPokemonPage(true);
+            setGetFavoritePokemons(false);
         } else if (location.pathname === "/favorite-pokemons") {
             setAllPokemonPage(false);
+            setGetFavoritePokemons(true);
         }
     }, [location.pathname]);
 
     const changePageToAll = () => {
         navigate("/");
-        setGetFavoritePokemons(false);
     };
     const changePageToFavorites = () => {
         navigate("/favorite-pokemons");
-        setGetFavoritePokemons(true);
     };
 
     const onRowLayout = () => {

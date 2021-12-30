@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import styled from "styled-components";
 
@@ -18,8 +18,6 @@ function CardsWrapper() {
         },
     });
 
-    data && console.log(data.pokemons.edges);
-
     return (
         <Container>
             <div id={cardsLayout === "row" ? "rowLayout" : "blockLayout"}>
@@ -29,7 +27,7 @@ function CardsWrapper() {
     );
 }
 
-const POKEMONS_QUERY = gql`
+export const POKEMONS_QUERY = gql`
     query pokemons($limit: Int, $offset: Int, $search: String, $type: String, $isFavorite: Boolean) {
         pokemons(
             query: {

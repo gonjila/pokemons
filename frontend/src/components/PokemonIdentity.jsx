@@ -1,7 +1,28 @@
+import { useMutation, gql } from "@apollo/client";
 import styled from "styled-components";
 
-function PokemonIdentity({ name, types, isFavorite }) {
-    const onHeartClick = () => {};
+import { POKEMONS_QUERY } from "./CardsWrapper";
+
+function PokemonIdentity({ id, name, types, isFavorite }) {
+    const [getPokemonFavorite] = useMutation(GET_FAVORITE_POKEMON, {
+        variables: { id },
+        // TODO გულზე დაჭერისას უნდა ახლდებოდეს ავტომატურად.
+        update: (cache, { data: { addItem } }) => {
+            const data = cache.readQuery({ query: POKEMONS_QUERY });
+            console.log(data);
+        },
+    });
+    const [unFavoritePokemon] = useMutation(UN_FAVORITE_POKEMON, {
+        variables: { id: id },
+    });
+
+    const onHeartClick = () => {
+        if (isFavorite) {
+            unFavoritePokemon();
+        } else {
+            getPokemonFavorite();
+        }
+    };
 
     return (
         <Container>
@@ -9,13 +30,33 @@ function PokemonIdentity({ name, types, isFavorite }) {
                 <h2>{name && name}</h2>
                 {types && <p>{types.map((type) => type + " ")}</p>}
             </div>
-            {/* TODO დაჭერისას უნდა იცვლებოდეს მთლიანი გულით */}
+
             <button onClick={onHeartClick}>
-                <img src={`/images/${isFavorite ? `heart` : `heart_border`}.svg`} alt={name} />
+                <img src={!isFavorite ? `/images/heart_border.svg` : `/images/heart.svg`} alt={name} />
             </button>
         </Container>
     );
 }
+
+const GET_FAVORITE_POKEMON = gql`
+    mutation favoritePokemon($id: ID!) {
+        favoritePokemon(id: $id) {
+            id
+            name
+            isFavorite
+        }
+    }
+`;
+
+const UN_FAVORITE_POKEMON = gql`
+    mutation unFavoritePokemon($id: ID!) {
+        unFavoritePokemon(id: $id) {
+            id
+            name
+            isFavorite
+        }
+    }
+`;
 
 export default PokemonIdentity;
 
