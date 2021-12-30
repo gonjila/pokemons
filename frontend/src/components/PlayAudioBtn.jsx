@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-function PlayAudio({ audioUrl }) {
+function PlayAudioBtn({ audioUrl }) {
     const audio = new Audio(audioUrl);
 
     return (
@@ -10,7 +10,7 @@ function PlayAudio({ audioUrl }) {
     );
 }
 
-export default PlayAudio;
+export default PlayAudioBtn;
 
 const Container = styled.button`
     width: 3rem;

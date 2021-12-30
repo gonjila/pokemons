@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Card from "../components/Card";
 import PokemonIdentity from "../components/PokemonIdentity";
-import PlayAudio from "../components/PlayAudio";
+import PlayAudioBtn from "../components/PlayAudioBtn";
 
 function AboutPokemon() {
     const location = useLocation();
@@ -15,7 +15,8 @@ function AboutPokemon() {
         variables: { name: pokemonName[2] },
     });
 
-    data && console.log("pokemon data", data.pokemonByName);
+    const CPvalue = data && Math.round(data.pokemonByName.maxCP / 3);
+    const HPvalue = data && Math.round(data.pokemonByName.maxHP / 2);
 
     // თუ მონაცემები არსებობს დააბრუნებს Containerს თუ არადა რეაქტის ცარიელ ფრაგმენტს
     return data ? (
@@ -23,7 +24,7 @@ function AboutPokemon() {
             <div className="aboutPokemon">
                 <div className="pokemonImgWrapper">
                     <img src={data.pokemonByName.image} alt={data.pokemonByName.name} />
-                    <PlayAudio audioUrl={data.pokemonByName.sound} />
+                    <PlayAudioBtn audioUrl={data.pokemonByName.sound} />
                 </div>
 
                 <div className="informationWrapper">
@@ -36,12 +37,12 @@ function AboutPokemon() {
 
                     <div id="progresBars">
                         <div>
-                            <progress id="CP" value={891} max={data.pokemonByName.maxCP} />
-                            <label htmlFor="CP">CP: 891</label>
+                            <progress id="CP" value={CPvalue} max={data.pokemonByName.maxCP} />
+                            <label htmlFor="CP">CP: {CPvalue}</label>
                         </div>
                         <div>
-                            <progress id="HP" value={1008} max={data.pokemonByName.maxHP} />
-                            <label htmlFor="HP">HP: 1008</label>
+                            <progress id="HP" value={HPvalue} max={data.pokemonByName.maxHP} />
+                            <label htmlFor="HP">HP: {HPvalue}</label>
                         </div>
                     </div>
                 </div>
