@@ -48,6 +48,9 @@ const Container = styled.div`
             width: 100%;
             height: 100%;
 
+            display: flex;
+            align-items: center;
+
             .pokemonImg {
                 width: 100%;
                 max-height: 235px;

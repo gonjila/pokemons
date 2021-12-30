@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import Card from "../components/Card";
 import PokemonIdentity from "../components/PokemonIdentity";
+import PlayAudio from "../components/PlayAudio";
 
 function AboutPokemon() {
     const location = useLocation();
@@ -22,6 +23,7 @@ function AboutPokemon() {
             <div className="aboutPokemon">
                 <div className="pokemonImgWrapper">
                     <img src={data.pokemonByName.image} alt={data.pokemonByName.name} />
+                    <PlayAudio audioUrl={data.pokemonByName.sound} />
                 </div>
 
                 <div className="informationWrapper">
@@ -39,7 +41,7 @@ function AboutPokemon() {
                         </div>
                         <div>
                             <progress id="HP" value={1008} max={data.pokemonByName.maxHP} />
-                            <label htmlFor="HP">HP:1008</label>
+                            <label htmlFor="HP">HP: 1008</label>
                         </div>
                     </div>
                 </div>
@@ -111,8 +113,9 @@ const Container = styled.div`
         border: 1px solid #c5c5c5;
 
         .pokemonImgWrapper {
-            text-align: center;
             height: 300px;
+            text-align: center;
+            position: relative;
 
             img {
                 width: 100%;
