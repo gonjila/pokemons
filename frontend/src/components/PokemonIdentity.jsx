@@ -10,23 +10,39 @@ function PokemonIdentity({ id, name, types, isFavorite }) {
 
     const [getPokemonFavorite] = useMutation(GET_FAVORITE_POKEMON, {
         variables: { id },
-        // update: (proxy, result) => {
-        //     const data = proxy.readQuery({
-        //         query: POKEMONS_QUERY,
-        //         variables: {
-        //             limit: 12,
-        //             offset: 0,
-        //             search: serchingPokemon,
-        //             type: pokemonsType,
-        //             isFavorite: getFavoritePokemons,
-        //         },
-        //     });
-        //     console.log(...data.pokemons.edges);
-        // },
     });
     // TODO გულზე დაჭერისას უნდა ახლდებოდეს ავტომატურად.
     const [unFavoritePokemon] = useMutation(UN_FAVORITE_POKEMON, {
         variables: { id: id },
+        update: (proxy, result) => {
+            const data = proxy.readQuery({
+                query: POKEMONS_QUERY,
+                variables: {
+                    limit: 12,
+                    offset: 0,
+                    search: serchingPokemon,
+                    type: pokemonsType,
+                    isFavorite: getFavoritePokemons,
+                },
+            });
+            console.log(data);
+            // console.log(result);
+            proxy.writeQuery({
+                query: POKEMONS_QUERY,
+                variables: {
+                    limit: 12,
+                    offset: 0,
+                    search: serchingPokemon,
+                    type: pokemonsType,
+                    isFavorite: getFavoritePokemons,
+                },
+                data: {
+                    pokemons: {
+                        edges: [...data.pokemons.edges.filter((pokemon) => pokemon.isFavorite === true)],
+                    },
+                },
+            });
+        },
     });
 
     const onHeartClick = () => {
