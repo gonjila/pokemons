@@ -22,12 +22,14 @@ function ControlBar() {
             setAllPokemonPage(false);
             setGetFavoritePokemons(true);
         }
-    }, [location.pathname]);
+    }, [location.pathname, setGetFavoritePokemons]);
 
     const changePageToAll = () => {
+        setGetFavoritePokemons(false);
         navigate("/");
     };
     const changePageToFavorites = () => {
+        setGetFavoritePokemons(true);
         navigate("/favorite-pokemons");
     };
 
@@ -97,7 +99,7 @@ function ControlBar() {
 }
 
 const POKEMON_TYPES = gql`
-    {
+    query pokemonTypes {
         pokemonTypes
     }
 `;

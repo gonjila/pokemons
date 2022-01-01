@@ -1,17 +1,30 @@
+import { useContext } from "react";
 import { useMutation, gql } from "@apollo/client";
 import styled from "styled-components";
 
+import { mainContext } from "../context/MainContext";
 import { POKEMONS_QUERY } from "./CardsWrapper";
 
 function PokemonIdentity({ id, name, types, isFavorite }) {
+    const { serchingPokemon, pokemonsType, getFavoritePokemons } = useContext(mainContext);
+
     const [getPokemonFavorite] = useMutation(GET_FAVORITE_POKEMON, {
         variables: { id },
-        // TODO გულზე დაჭერისას უნდა ახლდებოდეს ავტომატურად.
-        update: (cache, { data: { addItem } }) => {
-            const data = cache.readQuery({ query: POKEMONS_QUERY });
-            console.log(data);
-        },
+        // update: (proxy, result) => {
+        //     const data = proxy.readQuery({
+        //         query: POKEMONS_QUERY,
+        //         variables: {
+        //             limit: 12,
+        //             offset: 0,
+        //             search: serchingPokemon,
+        //             type: pokemonsType,
+        //             isFavorite: getFavoritePokemons,
+        //         },
+        //     });
+        //     console.log(...data.pokemons.edges);
+        // },
     });
+    // TODO გულზე დაჭერისას უნდა ახლდებოდეს ავტომატურად.
     const [unFavoritePokemon] = useMutation(UN_FAVORITE_POKEMON, {
         variables: { id: id },
     });

@@ -1,14 +1,16 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import { mainContext } from "../context/MainContext";
 import Card from "./Card";
 
 function CardsWrapper() {
+    const location = useLocation();
     const { getFavoritePokemons, serchingPokemon, pokemonsType, cardsLayout } = useContext(mainContext);
     //graphQL
-    const { data } = useQuery(POKEMONS_QUERY, {
+    const { data, refetch } = useQuery(POKEMONS_QUERY, {
         variables: {
             limit: 12,
             offset: 0,
@@ -17,6 +19,11 @@ function CardsWrapper() {
             isFavorite: getFavoritePokemons,
         },
     });
+
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname]);
 
     return (
         <Container>
