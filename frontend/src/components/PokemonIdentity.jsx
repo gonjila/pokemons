@@ -1,12 +1,14 @@
 import { useContext } from "react";
 import { useMutation, gql } from "@apollo/client";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import { mainContext } from "../context/MainContext";
 import { POKEMONS_QUERY } from "./CardsWrapper";
 
 function PokemonIdentity({ id, name, types, isFavorite }) {
-    const { serchingPokemon, pokemonsType, getFavoritePokemons } = useContext(mainContext);
+    const { pokemonsAmount, serchingPokemon, pokemonsType, getFavoritePokemons } = useContext(mainContext);
+    const location = useLocation();
 
     const [getPokemonFavorite] = useMutation(GET_FAVORITE_POKEMON, {
         variables: { id },
@@ -17,29 +19,32 @@ function PokemonIdentity({ id, name, types, isFavorite }) {
             const data = proxy.readQuery({
                 query: POKEMONS_QUERY,
                 variables: {
-                    limit: 12,
+                    limit: pokemonsAmount,
                     offset: 0,
                     search: serchingPokemon,
                     type: pokemonsType,
                     isFavorite: getFavoritePokemons,
                 },
             });
-            //BUG როცა ვშლი favoriteდან all გვერდზეც იცვლება პოკემონების რაოდენობა
-            proxy.writeQuery({
-                query: POKEMONS_QUERY,
-                variables: {
-                    limit: 12,
-                    offset: 0,
-                    search: serchingPokemon,
-                    type: pokemonsType,
-                    isFavorite: getFavoritePokemons,
-                },
-                data: {
-                    pokemons: {
-                        edges: [...data.pokemons.edges.filter((pokemon) => pokemon.isFavorite === true)],
+
+            // თუ favorite გვერდზეა მაშინ unlikeს დროს იშლება პოკემონი
+            if (location.pathname === "/favorite-pokemons") {
+                proxy.writeQuery({
+                    query: POKEMONS_QUERY,
+                    variables: {
+                        limit: pokemonsAmount,
+                        offset: 0,
+                        search: serchingPokemon,
+                        type: pokemonsType,
+                        isFavorite: getFavoritePokemons,
                     },
-                },
-            });
+                    data: {
+                        pokemons: {
+                            edges: [...data.pokemons.edges.filter((pokemon) => pokemon.isFavorite === true)],
+                        },
+                    },
+                });
+            }
         },
     });
 

@@ -29,6 +29,7 @@ function CardsWrapper() {
     });
 
     //infinite scroll
+    // FIXME როცა კიდევ ტვირთავს პოკემონებს ხელახალ fetchს აკეთებს და გვერდის თავში გვაგდებს
     const handleObserver = useCallback(
         (entries) => {
             const target = entries[0];
