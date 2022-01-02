@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useCallback, useRef } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -8,17 +8,46 @@ import Card from "./Card";
 
 function CardsWrapper() {
     const location = useLocation();
-    const { getFavoritePokemons, serchingPokemon, pokemonsType, cardsLayout } = useContext(mainContext);
+    const loader = useRef();
+    const {
+        pokemonsAmount,
+        setPokemonsAmount,
+        getFavoritePokemons,
+        serchingPokemon,
+        pokemonsType,
+        cardsLayout,
+    } = useContext(mainContext);
     //graphQL
     const { data, refetch } = useQuery(POKEMONS_QUERY, {
         variables: {
-            limit: 12,
+            limit: pokemonsAmount,
             offset: 0,
             search: serchingPokemon,
             type: pokemonsType,
             isFavorite: getFavoritePokemons,
         },
     });
+
+    //infinite scroll
+    const handleObserver = useCallback(
+        (entries) => {
+            const target = entries[0];
+            if (target.isIntersecting) {
+                setPokemonsAmount((prev) => prev + 12);
+            }
+        },
+        [setPokemonsAmount]
+    );
+
+    useEffect(() => {
+        const option = {
+            root: null,
+            rootMargin: "20px",
+            threshold: 1,
+        };
+        const observer = new IntersectionObserver(handleObserver, option);
+        if (loader.current) observer.observe(loader.current);
+    }, [handleObserver]);
 
     useEffect(() => {
         refetch();
@@ -30,6 +59,7 @@ function CardsWrapper() {
             <div id={cardsLayout === "row" ? "rowLayout" : "blockLayout"}>
                 {data && data.pokemons.edges.map((pokemon) => <Card key={pokemon.id} pokemon={pokemon} />)}
             </div>
+            <div ref={loader} />
         </Container>
     );
 }

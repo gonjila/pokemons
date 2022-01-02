@@ -11,7 +11,6 @@ function PokemonIdentity({ id, name, types, isFavorite }) {
     const [getPokemonFavorite] = useMutation(GET_FAVORITE_POKEMON, {
         variables: { id },
     });
-    // TODO გულზე დაჭერისას უნდა ახლდებოდეს ავტომატურად.
     const [unFavoritePokemon] = useMutation(UN_FAVORITE_POKEMON, {
         variables: { id: id },
         update: (proxy, result) => {
@@ -25,8 +24,7 @@ function PokemonIdentity({ id, name, types, isFavorite }) {
                     isFavorite: getFavoritePokemons,
                 },
             });
-            console.log(data);
-            // console.log(result);
+            //BUG როცა ვშლი favoriteდან all გვერდზეც იცვლება პოკემონების რაოდენობა
             proxy.writeQuery({
                 query: POKEMONS_QUERY,
                 variables: {
