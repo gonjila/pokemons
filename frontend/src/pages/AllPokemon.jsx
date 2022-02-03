@@ -4,12 +4,12 @@ import CardsWrapper from "../components/CardsWrapper";
 import ControlBar from "../components/ControlBar";
 
 function AllPokemon() {
-    return (
-        <Container>
-            <ControlBar />
-            <CardsWrapper />
-        </Container>
-    );
+  return (
+    <Container>
+      <ControlBar />
+      <CardsWrapper />
+    </Container>
+  );
 }
 
 export default AllPokemon;
