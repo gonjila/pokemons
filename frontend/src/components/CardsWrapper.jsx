@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useCallback, useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -8,20 +8,19 @@ import Card from "./Card";
 
 function CardsWrapper() {
   const location = useLocation();
-  const loader = useRef();
-  const [pokemonsArray, setPokemonsArray] = useState([]);
+
+  const [pokemonsAmount, setPokemonsAmount] = useState(156);
+  const [pokemonsOffset, setPokemonsOffset] = useState(0);
 
   const {
-    pokemonsAmount,
-    setPokemonsAmount,
-    pokemonsOffset,
-    setPokemonsOffset,
     getFavoritePokemons,
     serchingPokemon,
+    setSearchingPokemon,
     pokemonsType,
     setPokemonsType,
     cardsLayout,
   } = useContext(mainContext);
+
   //graphQL
   const { data, refetch } = useQuery(POKEMONS_QUERY, {
     variables: {
@@ -33,35 +32,14 @@ function CardsWrapper() {
     },
   });
 
-  //infinite scroll
-  // FIXME როცა კიდევ ტვირთავს პოკემონებს ხელახალ fetchს აკეთებს და გვერდის თავში გვაგდებს
-  const handleObserver = useCallback(
-    (entries) => {
-      const target = entries[0];
-      if (target.isIntersecting && !getFavoritePokemons && data?.pokemons?.edges.length >= 12) {
-        setPokemonsAmount((prev) => prev + 12);
-        // setPokemonsOffset((prev) => prev + 12);
-      }
-    },
-    [setPokemonsAmount, data?.pokemons?.edges]
-  );
-
-  useEffect(() => {
-    const option = {
-      root: null,
-      rootMargin: "20px",
-      threshold: 1,
-    };
-    const observer = new IntersectionObserver(handleObserver, option);
-    if (loader.current) observer.observe(loader.current);
-  }, [handleObserver]);
-
   useEffect(() => {
     setPokemonsType("");
+    setSearchingPokemon("");
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  // TODO შეიძლება რომ დაბლა ღილაკები გავაკეთო ფეიჯებზე გადასასვლელად.
   return (
     <Container>
       <div id={cardsLayout === "row" ? "rowLayout" : "blockLayout"}>
@@ -69,7 +47,6 @@ function CardsWrapper() {
           <Card key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
-      {<div ref={loader} />}
     </Container>
   );
 }
